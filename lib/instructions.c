@@ -8,7 +8,7 @@ instruction instructions[0x100] =
     [0x02] = {IN_LD, AM_MR_R, RT_BC, RT_A},
     [0x03] = {IN_INC, AM_R, RT_BC},
     [0x04] = {IN_INC, AM_R, RT_B},
-    
+
 
     //0x1.
 
