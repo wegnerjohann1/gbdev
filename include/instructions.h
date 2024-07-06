@@ -72,7 +72,9 @@ typedef enum
     AM_D8,
     AM_A16,
     AM_MR_D8,
-    AM_HL_SPR //0xF8
+    AM_HL_SPR, //0xF8
+    AM_S8, // signed 8bit data for relative jumps
+    AM_R_S8
 } addr_mode;
 
 typedef enum
