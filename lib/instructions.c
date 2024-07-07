@@ -282,3 +282,11 @@ instruction instructions[0x100] =
     [0xFF] = {IN_RST, AM_IMP, RT_NONE, RT_NONE, CT_NONE, 0x38}
 
 };
+
+instruction *instruction_by_opcode(u8 opcode)
+{
+    if (instructions[opcode].type == IN_NONE)
+        return NULL;
+
+    return &instructions[opcode];
+}

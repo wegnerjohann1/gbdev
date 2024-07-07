@@ -3,16 +3,8 @@
 
 typedef struct
 {
-    bool zero;
-    bool sub;
-    bool hcarry;
-    bool carry;
-} Flags;
-
-
-typedef struct
-{
     u8 a;
+    u8 f;
     u8 b;
     u8 c;
     u8 d;
@@ -26,11 +18,12 @@ typedef struct
 
 typedef struct
 {
-    cpu_registers reg;
+    cpu_registers regs;
 
     //current fetch...
-    u16 fetch_data;
+    u16 fetched_data;
     u16 mem_dest;
+    bool dest_is_mem;
     u8 cur_opcode;
     instruction *cur_inst;
 
@@ -42,3 +35,5 @@ typedef struct
 
 void cpu_init();
 bool cpu_step();
+
+u16 cpu_read_reg(reg_type rt);

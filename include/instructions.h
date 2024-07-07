@@ -58,6 +58,7 @@ typedef enum
     AM_R_R,
     AM_R_D8,
     AM_R_D16,
+    AM_A16,
     AM_MR,
     AM_MR_R,
     AM_R_MR,
@@ -70,7 +71,6 @@ typedef enum
     AM_A8_R,
     AM_R_A8,
     AM_D8,
-    AM_A16,
     AM_MR_D8,
     AM_HL_SPR, //0xF8
     AM_S8, // signed 8bit data for relative jumps
@@ -112,3 +112,5 @@ typedef struct
     u8 param;
 
 } instruction;
+
+instruction *instruction_by_opcode(u8 opcode);

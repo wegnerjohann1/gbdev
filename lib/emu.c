@@ -34,6 +34,11 @@ void delay(u32 ms)
     WaitTime((double) ms / 1000.);
 }
 
+void emu_cycles(int m_cycles)
+{
+    printf("emu_cycles not implemented yet\n");
+}
+
 int emu_run(int argc, char **argv)
 {
     if(argc < 2)
