@@ -1,0 +1,4 @@
+exit(-1): Wrong usage of gb.exe
+exit(-2): Failed to load rom
+exit(-3): CPU stopped
+exit(-7): Unknown Instruction, e.g. reached default statement in addressing mode

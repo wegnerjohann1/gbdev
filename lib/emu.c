@@ -79,8 +79,15 @@ int emu_run(int argc, char **argv)
             continue;
         }
 
+        if (!cpu_step())
+        {
+            printf("CPU stopped\n");
+            return -3;
+        }
+        
         BeginDrawing();
         EndDrawing();
+
         ctx.ticks++;
     }
 

@@ -6,7 +6,7 @@ cpu_context ctx = { 0 };
 
 void cpu_init()
 {
-
+    ctx.stepping = false;
 }
 
 static void fetch_instruction()
@@ -118,12 +118,19 @@ static void execute()
 
 bool cpu_step()
 {
+    if (ctx.stepping)
+        getchar();
     if (!ctx.halted)
     {
+        u16 pc = ctx.regs.PC;
+         
         fetch_instruction();
         fetch_data();
+
+        printf("Executing Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
+
         execute();
     }
     
-    return false;
+    return true;
 }
