@@ -145,7 +145,15 @@ static void fetch_data()
 
 static void execute()
 {
-    printf("Not executing yet...\n");
+    IN_PROC proc = inst_get_processor(ctx.cur_inst->type);
+
+    if (!proc) // check if proc == NULL
+    {
+        printf("Process for Instruction %02X not implemented\n", ctx.cur_opcode);
+        return;
+    }
+
+    proc(&ctx);
 }
 
 bool cpu_step()

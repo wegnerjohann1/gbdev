@@ -19,4 +19,4 @@ typedef int64_t s64;
 
 void delay(u32 ms);
 
-#define NO_IMPL { fprintf(stderr, "NOT YET IMPLEMENDED\n"); exit(-5); }
+#define NO_IMPL { fprintf(stderr, "NOT YET IMPLEMENTED\n"); exit(-5); }
