@@ -39,8 +39,6 @@ static void execute()
 
 bool cpu_step()
 {
-    if (ctx.stepping)
-        getchar();
     if (!ctx.halted)
     {
         u16 pc = ctx.regs.PC;

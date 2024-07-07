@@ -1,8 +1,10 @@
 #include <cpu.h>
+#include <bus.h>
+#include <emu.h>
 
 extern cpu_context ctx;
 
-static void fetch_data()
+void fetch_data()
 {
     ctx.mem_dest = 0;
     ctx.dest_is_mem = false;
