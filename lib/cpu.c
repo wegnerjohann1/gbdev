@@ -101,6 +101,38 @@ static void fetch_data()
         ctx.fetched_data = bus_read(addr);
         emu_cycles(1);
         return; 
+    
+    case AM_A16_R:
+        {
+            u16 lo = bus_read(ctx.regs.PC);
+            emu_cycles(1);
+
+            u16 hi = bus_read(ctx.regs.PC + 1);
+            emu_cycles(1);
+
+            ctx.mem_dest = lo | (hi << 8);
+            ctx.dest_is_mem = true;
+
+            ctx.fetched_data = cpu_read_reg(ctx.cur_inst->reg_2);
+            ctx.regs.PC += 2;
+        }
+        return;
+
+    case AM_R_A16:
+        {
+            u16 lo = bus_read(ctx.regs.PC);
+            emu_cycles(1);
+
+            u16 hi = bus_read(ctx.regs.PC + 1);
+            emu_cycles(1);
+
+            ctx.mem_dest = lo | (hi << 8);
+            ctx.dest_is_mem = true;
+
+            ctx.fetched_data = cpu_read_reg(ctx.cur_inst->reg_1);
+            ctx.regs.PC += 2;   
+        }
+        return;
 
     //TODO IMPLEMENT OTHER ADDRESSING MODES       
 
