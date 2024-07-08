@@ -1,5 +1,6 @@
 #include <cpu.h>
 #include <emu.h>
+#include <bus.h>
 
 // proccess cpu instruction
 
@@ -33,7 +34,16 @@ static void proc_nop(cpu_context *ctx)
 
 static void proc_ld(cpu_context *ctx)
 {
-    //TODO...
+    if (ctx->dest_is_mem)
+    {
+        bus_write(ctx->mem_dest, ctx->fetched_data);
+    }
+    else
+    {
+        cpu_set_reg(ctx->cur_inst->reg_1, ctx->fetched_data);
+    }
+    
+    //TODO check if its correct on github or maybe just leave it until i get errors :)
 }
 
 static void proc_jp(cpu_context *ctx)
@@ -51,6 +61,7 @@ static IN_PROC processors[] =
     [IN_NOP] = proc_nop,
     [IN_LD] = proc_ld,
     [IN_JP] = proc_jp
+    //TODO add rest of proc functions for instructions
 };
 
 IN_PROC inst_get_processor(in_type type)
