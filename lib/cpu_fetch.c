@@ -115,6 +115,20 @@ void fetch_data()
             ctx.regs.PC += 2;   
         }
         return;
+    
+    case AM_HLI_R:
+        ctx.fetched_data = cpu_read_reg(ctx.cur_inst->reg_2);
+        ctx.mem_dest = cpu_read_reg(ctx.cur_inst->reg_1);
+        ctx.dest_is_mem = true;
+        cpu_set_reg(RT_HL, cpu_read_reg(RT_HL) + 1);
+        return;
+    
+    case AM_HLD_R:
+        ctx.fetched_data = cpu_read_reg(ctx.cur_inst->reg_2);
+        ctx.mem_dest = cpu_read_reg(ctx.cur_inst->reg_1);
+        ctx.dest_is_mem = true;
+        cpu_set_reg(RT_HL, cpu_read_reg(RT_HL) - 1);
+        return;
 
     //TODO IMPLEMENT OTHER ADDRESSING MODES       
 
