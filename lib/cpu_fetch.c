@@ -147,7 +147,7 @@ void fetch_data()
         ctx.mem_dest = bus_read(ctx.regs.PC) | 0xFF00;
         ctx.dest_is_mem = true;
         emu_cycles(1);
-        ctx.regs.PC;
+        ctx.regs.PC++;
         return;
 
     case AM_R_A8:
