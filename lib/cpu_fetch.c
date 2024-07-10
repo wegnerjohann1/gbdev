@@ -130,6 +130,54 @@ void fetch_data()
         cpu_set_reg(RT_HL, cpu_read_reg(RT_HL) - 1);
         return;
 
+    case AM_R_HLI:
+        ctx.fetched_data = bus_read(cpu_read_reg(ctx.cur_inst->reg_2));
+        emu_cycles(1);
+        cpu_set_reg(RT_HL, cpu_read_reg(RT_HL) + 1);
+        return;
+
+    case AM_R_HLD:
+        ctx.fetched_data = bus_read(cpu_read_reg(ctx.cur_inst->reg_2));
+        emu_cycles(1);
+        cpu_set_reg(RT_HL, cpu_read_reg(RT_HL) - 1);
+        return;
+    
+    case AM_A8_R:
+        ctx.fetched_data = cpu_read_reg(ctx.cur_inst->reg_2);
+        ctx.mem_dest = bus_read(ctx.regs.PC) | 0xFF00;
+        ctx.dest_is_mem = true;
+        emu_cycles(1);
+        ctx.regs.PC;
+        return;
+
+    case AM_R_A8:
+        ctx.fetched_data = bus_read(ctx.regs.PC) | 0xFF00;
+        emu_cycles(1);
+        ctx.regs.PC++;
+        return;
+
+    case AM_D8: // check for s8 in proc by converting to signed byte
+        ctx.fetched_data = bus_read(ctx.regs.PC);
+        emu_cycles(1);
+        ctx.regs.PC++;
+        return;
+    
+    case AM_MR_D8:
+        ctx.mem_dest = cpu_read_reg(ctx.cur_inst->reg_1);
+        ctx.dest_is_mem = true;
+        ctx.fetched_data = bus_read(ctx.regs.PC);
+        emu_cycles(1);
+        ctx.regs.PC++;
+        return;
+    
+    case AM_HL_SPR:
+        ctx.fetched_data = bus_read(ctx.regs.PC);
+        emu_cycles(1);
+        ctx.regs.PC++;
+        return;
+
+
+
     //TODO IMPLEMENT OTHER ADDRESSING MODES       
 
     default:

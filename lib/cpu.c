@@ -44,6 +44,9 @@ bool cpu_step()
         u16 pc = ctx.regs.PC;
          
         fetch_instruction();
+        
+        printf("Fetching Data for Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
+
         fetch_data();
 
         printf("Executing Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
