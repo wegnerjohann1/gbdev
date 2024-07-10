@@ -176,10 +176,6 @@ void fetch_data()
         ctx.regs.PC++;
         return;
 
-
-
-    //TODO IMPLEMENT OTHER ADDRESSING MODES       
-
     default:
         printf("Unknown Addressing Mode! %d (%02X)\n", ctx.cur_inst->mode, ctx.cur_opcode);
         exit(-7);
