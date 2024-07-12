@@ -50,10 +50,11 @@ bool cpu_step()
         fetch_data();
 
         //Debug print
-        printf("%04X: %-7s (%02X %02X %02X) A: %02X F: %02X B: %02X C: %02X D: %02X E: %02X H: %02X L: %02X\n",
+        printf("%04X: %-7s (%02X %02X %02X) AF: %04X BC: %04X DE: %04X HL: %04X SP: %04X\n",
             pc, inst_name(ctx.cur_inst->type), ctx.cur_opcode,
-            bus_read(pc + 1), bus_read(pc + 2), ctx.regs.a, ctx.regs.f, ctx.regs.b,
-            ctx.regs.c, ctx.regs.d, ctx.regs.e, ctx.regs.h, ctx.regs.l);
+            bus_read(pc + 1), bus_read(pc + 2), cpu_read_reg(RT_AF),
+            cpu_read_reg(RT_BC), cpu_read_reg(RT_DE),
+            cpu_read_reg(RT_HL),  ctx.regs.SP);
         
         //printf("Executing Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
 
