@@ -1,3 +1,4 @@
 *.exe
 Makefile
 test.c
+gb-test-roms
