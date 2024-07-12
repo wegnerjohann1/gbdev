@@ -36,7 +36,7 @@ void delay(u32 ms)
 
 void emu_cycles(int m_cycles)
 {
-    printf("emu_cycles not implemented yet\n");
+    //printf("emu_cycles not implemented yet\n");
 }
 
 int emu_run(int argc, char **argv)

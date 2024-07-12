@@ -290,3 +290,57 @@ instruction *instruction_by_opcode(u8 opcode)
 
     return &instructions[opcode];
 }
+
+char *inst_lookup[] = 
+{
+    "<NONE>",
+    "NOP",
+    "LD",
+    "INC",
+    "DEC",
+    "JP",
+    "RRCA",
+    "RLCA",
+    "RLA",
+    "RRA",
+    "STOP",
+    "JR",
+    "DAA",
+    "SCF",
+    "HALT",
+    "CPL",
+    "CCF",
+    "ADD",
+    "ADC",
+    "SUB",
+    "SBC",
+    "AND",
+    "XOR",
+    "OR",
+    "CP",
+    "RET",
+    "RETI",
+    "RST",
+    "CALL",
+    "POP",
+    "PUSH",
+    "DI",
+    "EI",
+    "CB",
+    "RLC",
+    "RRC",
+    "RL",
+    "RR",
+    "SLA",
+    "SRA",
+    "SWAP",
+    "SRL",
+    "BIT",
+    "RES",
+    "SET"
+};
+
+char *inst_name(in_type it)
+{
+    return inst_lookup[it];
+}

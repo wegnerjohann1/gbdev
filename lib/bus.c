@@ -22,7 +22,7 @@ u8 bus_read(u16 address)
         return cart_read(address);
     }
 
-    return 0;
+    NO_IMPL
 }
 
 void bus_write(u16 address, u8 value)
@@ -31,6 +31,6 @@ void bus_write(u16 address, u8 value)
     {
         cart_write(address, value);
     }
-
-
+    
+    NO_IMPL
 }
