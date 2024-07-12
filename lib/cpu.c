@@ -7,6 +7,7 @@ cpu_context ctx = { 0 };
 void cpu_init()
 {
     ctx.stepping = false;
+    ctx.regs.a = 0x01;
 }
 
 static void fetch_instruction()
@@ -30,7 +31,7 @@ static void execute()
 
     if (!proc) // check if proc == NULL
     {
-        printf("Process for Instruction %02X not implemented\n", ctx.cur_opcode);
+        printf("Process for %s not implemented\n", inst_name(ctx.cur_inst->type));
         return;
     }
 

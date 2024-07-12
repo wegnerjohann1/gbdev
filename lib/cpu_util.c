@@ -35,7 +35,6 @@ u16 cpu_read_reg(reg_type rt)
 
 void cpu_set_reg(reg_type rt, u16 value)
 {
-        printf("%04X\n", value);
     switch (rt)
     {
     case RT_A: ctx.regs.a = value & 0x00FF; break;
