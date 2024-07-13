@@ -54,14 +54,14 @@ static void proc_nop(cpu_context *ctx)
 
 static void proc_ld(cpu_context *ctx)
 {
-    // if (ctx->dest_is_mem)
-    // {
-    //     bus_write(ctx->mem_dest, ctx->fetched_data);
-    // }
-    // else
-    // {
-    //     cpu_set_reg(ctx->cur_inst->reg_1, ctx->fetched_data);
-    // }
+    if (ctx->dest_is_mem)
+    {
+        bus_write(ctx->mem_dest, ctx->fetched_data);
+    }
+    else
+    {
+        cpu_set_reg(ctx->cur_inst->reg_1, ctx->fetched_data);
+    }
     
     //TODO check if its correct on github or maybe just leave it until i get errors :)
 }

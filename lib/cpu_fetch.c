@@ -111,10 +111,8 @@ void fetch_data()
             u16 hi = bus_read(ctx.regs.PC + 1);
             emu_cycles(1);
 
-            ctx.mem_dest = lo | (hi << 8);
-            ctx.dest_is_mem = true;
-
-            ctx.fetched_data = cpu_read_reg(ctx.cur_inst->reg_1);
+            ctx.fetched_data = bus_read(lo | (hi << 8));
+            emu_cycles(1);
             ctx.regs.PC += 2;   
         }
         return;

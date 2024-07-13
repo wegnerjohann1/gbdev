@@ -121,3 +121,18 @@ void bus_write(u16 address, u8 value)
         exit(-8);
     }
 }
+
+u16 bus_read16(u16 address)
+{
+    u16 lo = bus_read(address);
+    u16 hi = bus_read(address + 1);
+
+    return lo | (hi << 8);
+}
+
+void bus_write16(u16 address, u16 value)
+{
+    // write 0xABCD in memory as 0xCD 0xAB
+    bus_write(address + 1, (value >> 8) & 0x00FF);
+    bus_write(address, value & 0x00FF);
+}
