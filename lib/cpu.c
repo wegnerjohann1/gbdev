@@ -44,6 +44,7 @@ bool cpu_step()
         u16 pc = ctx.regs.PC;
          
         fetch_instruction();
+        emu_cycles(1);
         
         //printf("Fetching Data for Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
         

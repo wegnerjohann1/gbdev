@@ -56,14 +56,42 @@ static void proc_ld(cpu_context *ctx)
 {
     if (ctx->dest_is_mem)
     {
-        bus_write(ctx->mem_dest, ctx->fetched_data);
+        if (ctx->cur_inst->reg_2 >= RT_AF)
+        {
+            emu_cycles(1);
+            bus_write(ctx->mem_dest, ctx->fetched_data);
+        }
+        else
+            bus_write(ctx->mem_dest, ctx->fetched_data);
+        
+        emu_cycles(1);
+
+        return;
     }
-    else
+
+    if (ctx->cur_inst->mode == AM_HL_SPR)
     {
-        cpu_set_reg(ctx->cur_inst->reg_1, ctx->fetched_data);
+        // get first 4 bits of both summands and check if any bit after 4th is 1 ie >= 0x10;
+        bool hflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x000F) + (cpu_read_reg(ctx->fetched_data) & 0x000F) >= 0x10;
+        // get first 8 bits of both summands and check if any bit after 8th is 1 ie >= 0x100;
+        bool cflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x00FF) + (cpu_read_reg(ctx->fetched_data) & 0x00FF) >= 0x100;
+
+        cpu_set_flags(ctx, 0, 0, hflag, cflag);
+        cpu_set_reg(ctx->cur_inst->reg_1, ctx->cur_inst->reg_2 + (s8)ctx->fetched_data);
+        emu_cycles(1);
+        return;
+    }
+
+    if (ctx->cur_inst->reg_2 >= RT_AF)
+    {
+        //probaly only LD SP, HL : 0xF9
+        cpu_set_reg(ctx->cur_inst->reg_1, ctx->cur_inst->reg_2);
+        emu_cycles(1);
+        return;
     }
     
-    //TODO check if its correct on github or maybe just leave it until i get errors :)
+    cpu_set_reg(ctx->cur_inst->reg_1, ctx->fetched_data);
+    
 }
 
 static void proc_di(cpu_context *ctx)
