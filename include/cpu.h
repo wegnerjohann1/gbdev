@@ -33,6 +33,7 @@ typedef struct
 
     bool int_master_enabled;
     bool enabling_ime;
+    u8 ie_register;
 
 } cpu_context;
 
@@ -51,3 +52,6 @@ IN_PROC inst_get_processor(in_type type);
 
 u16 cpu_read_reg(reg_type rt);
 void cpu_set_reg(reg_type rt, u16 value);
+
+u8 cpu_get_ie_register();
+void cpu_set_ie_register(u8 val);

@@ -66,3 +66,14 @@ bool cpu_step()
     
     return true;
 }
+
+
+u8 cpu_get_ie_register()
+{
+    return ctx.ie_register;
+}
+
+void cpu_set_ie_register(u8 val)
+{
+    ctx.ie_register = val;
+}
