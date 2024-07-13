@@ -44,13 +44,13 @@ int emu_run(int argc, char **argv)
     if(argc < 2)
     {
         printf("Usage: emu <rom_file>\n");
-        return -1;
+        return WRONG_EXE_USAGE;
     }
 
     if(!cart_load(argv[1]))
     {
         printf("Failed to load ROM file: %s\n", argv[1]);
-        return -2;
+        return FAILED_ROM_LOAD;
     }
 
     printf("Cart loaded..\n");
@@ -82,7 +82,7 @@ int emu_run(int argc, char **argv)
         if (!cpu_step())
         {
             printf("CPU stopped\n");
-            return -3;
+            return CPU_STOPPED;
         }
         
         BeginDrawing();
@@ -90,6 +90,7 @@ int emu_run(int argc, char **argv)
 
         ctx.ticks++;
     }
+
 
     return 0;
 

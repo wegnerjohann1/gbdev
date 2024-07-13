@@ -17,7 +17,7 @@ static void fetch_instruction()
     if (ctx.cur_inst == NULL)
     {
         printf("Unknown Instruction! %d (%02X)\n", ctx.cur_inst->mode, ctx.cur_opcode);
-        exit(-7);
+        exit(UNKNOWN_INSTRUCTION);
     }
 
 }

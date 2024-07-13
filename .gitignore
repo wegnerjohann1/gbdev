@@ -2,3 +2,4 @@
 Makefile
 test.c
 gb-test-roms
+error_codes

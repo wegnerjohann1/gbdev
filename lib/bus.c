@@ -1,5 +1,6 @@
 #include <bus.h>
 #include <cart.h>
+#include <ram.h>
 
 // 0x0000 - 0x3FFF : ROM Bank 0
 // 0x4000 - 0x7FFF : ROM Bank 1 - Switchable
@@ -35,9 +36,9 @@ u8 bus_read(u16 address)
     }
     else if (address < 0xE000)
     {
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
+        //printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Implement WRAM
-        return 0;
+        return wram_read(address);
     }
     else if (address < 0xFE00)
     {
@@ -65,9 +66,9 @@ u8 bus_read(u16 address)
     }
     else if (address < 0xFFFF)
     {
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
+        //printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Implement HRAM
-        return 0;
+        return hram_read(address);
     }
     else if (address == 0xFFFF)
     {
@@ -78,7 +79,7 @@ u8 bus_read(u16 address)
     else
     {
         printf("Address outside of memory range: %04X\n", address);
-        exit(-8);
+        exit(MEMORY_OUT_OF_RANGE);
     }
 
 }
@@ -105,7 +106,7 @@ void bus_write(u16 address, u8 value)
     {
         printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement WRAM
-
+        wram_write(address, value);
     }
     else if (address < 0xFE00)
     {
@@ -132,9 +133,9 @@ void bus_write(u16 address, u8 value)
     }
     else if (address < 0xFFFF)
     {
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
+        //printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement HRAM
-
+        hram_write(address, value);
     }
     else if (address == 0xFFFF)
     {
@@ -145,7 +146,7 @@ void bus_write(u16 address, u8 value)
     else
     {
         printf("Address outside of memory range: %04X\n", address);
-        exit(-8);
+        exit(MEMORY_OUT_OF_RANGE);
     }
 }
 
