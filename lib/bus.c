@@ -23,43 +23,57 @@ u8 bus_read(u16 address)
     } 
     else if (address < 0xA000)
     {
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Implement VRAM
-        return 0xFF;
+        return 0;
     }
     else if (address < 0xC000)
     {
-        //TODO Implement external RAM
-        return 0xFF;
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
+        //TODO Implement external CART RAM
+        return 0;
     }
     else if (address < 0xE000)
     {
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Implement WRAM
-        return 0xFF;
+        return 0;
     }
     else if (address < 0xFE00)
     {
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Implement Echo RAM
-        return 0xFF;
+        return 0;
+    }
+    else if (address < 0xFEA0)
+    {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
+        //TODO Implement OAM Object attribute memory
+        return 0;
     }
     else if (address < 0xFF00)
     {
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Nintendo prohibited AREA
-        return 0xFF;
+        return 0;
     }
     else if (address < 0xFF80)
     {
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO IO Registers
-        return 0xFF;
+        return 0;
     }
     else if (address < 0xFFFF)
     {
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Implement HRAM
-        return 0xFF;
+        return 0;
     }
     else if (address == 0xFFFF)
     {
+        printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Interrupt enable register
-        return 0xFF;
+        return 0;
     }
     else
     {
@@ -77,41 +91,54 @@ void bus_write(u16 address, u8 value)
     }
     else if (address < 0xA000)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement VRAM
 
     }
     else if (address < 0xC000)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement external RAM
 
     }
     else if (address < 0xE000)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement WRAM
 
     }
     else if (address < 0xFE00)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement Echo RAM
 
     }
+    else if (address < 0xFEA0)
+    {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
+        //TODO Implement OAM Object attribute memory
+    }
     else if (address < 0xFF00)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Nintendo prohibited AREA
 
     }
     else if (address < 0xFF80)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO IO Registers
 
     }
     else if (address < 0xFFFF)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement HRAM
 
     }
     else if (address == 0xFFFF)
     {
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Interrupt enable register
 
     }

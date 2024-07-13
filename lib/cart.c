@@ -349,5 +349,5 @@ u8 cart_read(u16 address)
 
 void cart_write(u16 address, u8 value)
 {
-    NO_IMPL
+    printf("UNSUPPORTED cart_write(%04X, %02X)\n", address, value);
 }
