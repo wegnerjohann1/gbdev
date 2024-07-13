@@ -1,6 +1,7 @@
 #include <cpu.h>
 #include <emu.h>
 #include <bus.h>
+#include <stack.h>
 
 // proccess cpu instruction
 
@@ -49,7 +50,7 @@ static void proc_none(cpu_context *ctx)
 
 static void proc_nop(cpu_context *ctx)
 {
-    //TODO...
+    //do nothing
 }
 
 static void proc_ld(cpu_context *ctx)
@@ -121,6 +122,41 @@ static void proc_jp(cpu_context *ctx)
     }
 }
 
+static void proc_jr(cpu_context *ctx)
+{
+    if (check_cond(ctx))
+    {   
+        ctx->regs.PC += ((s8)ctx->fetched_data);
+        emu_cycles(1);
+    }
+}
+
+static void proc_pop(cpu_context *ctx)
+{
+    u16 lo = stack_pop();
+    emu_cycles(1);
+    u16 hi = stack_pop();
+    emu_cycles(1);
+    u16 n = (hi << 8) | lo;
+    if (ctx->cur_inst->reg_1 == RT_AF)
+        cpu_set_reg(RT_AF, n & 0xFFF0);
+    else
+        cpu_set_reg(ctx->cur_inst->reg_1, n);
+}
+
+static void proc_push(cpu_context *ctx)
+{
+    u16 hi = (cpu_read_reg(ctx->cur_inst->reg_1) >> 8) & 0x00FF;
+    emu_cycles(1);
+    stack_push(hi);
+
+    u16 lo = cpu_read_reg(ctx->cur_inst->reg_1) & 0x00FF;
+    emu_cycles(1);
+    stack_push(lo);
+    
+    emu_cycles(1);
+}
+
 static IN_PROC processors[] = 
 {
     [IN_NONE] = proc_none,
@@ -129,7 +165,10 @@ static IN_PROC processors[] =
     [IN_JP] = proc_jp,
     [IN_DI] = proc_di,
     [IN_EI] = proc_ei,
-    [IN_XOR] = proc_xor
+    [IN_XOR] = proc_xor,
+    [IN_POP] = proc_pop,
+    [IN_PUSH] = proc_push,
+    [IN_JR] = proc_jr
     //TODO add rest of proc functions for instructions
 };
 

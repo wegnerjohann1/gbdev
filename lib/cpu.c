@@ -6,7 +6,7 @@ cpu_context ctx = { 0 };
 
 void cpu_init()
 {
-    
+    ctx.regs.PC = 0x100;
 }
 
 static void fetch_instruction()
