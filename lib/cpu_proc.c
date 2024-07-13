@@ -71,6 +71,7 @@ static void proc_ld(cpu_context *ctx)
 
     if (ctx->cur_inst->mode == AM_HL_SPR)
     {
+        // TODO understand why this work also for subtraction in binary
         // get first 4 bits of both summands and check if any bit after 4th is 1 ie >= 0x10;
         bool hflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x000F) + (cpu_read_reg(ctx->fetched_data) & 0x000F) >= 0x10;
         // get first 8 bits of both summands and check if any bit after 8th is 1 ie >= 0x100;

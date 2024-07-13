@@ -77,14 +77,16 @@ void fetch_data()
         return;
 
     case AM_R_MR:
-        u16 addr = cpu_read_reg(ctx.cur_inst->reg_2);
-
-        if (ctx.cur_inst->reg_2 == RT_C)
         {
-            addr |= 0xFF00;
-        }
-        ctx.fetched_data = bus_read(addr);
-        emu_cycles(1);
+            u16 addr = cpu_read_reg(ctx.cur_inst->reg_2);
+
+            if (ctx.cur_inst->reg_2 == RT_C)
+            {
+                addr |= 0xFF00;
+            }
+            ctx.fetched_data = bus_read(addr);
+            emu_cycles(1);
+        }   
         return; 
     
     case AM_A16_R:
@@ -152,9 +154,13 @@ void fetch_data()
         return;
 
     case AM_R_A8:
-        ctx.fetched_data = bus_read(ctx.regs.PC) | 0xFF00;
-        emu_cycles(1);
-        ctx.regs.PC++;
+        {
+            u16 addr = bus_read(ctx.regs.PC) | 0xFF00;
+            emu_cycles(1);
+            ctx.fetched_data = bus_read(addr);
+            emu_cycles(1);
+            ctx.regs.PC++;
+        }
         return;
 
     case AM_D8: // check for s8 in proc by converting to signed byte
