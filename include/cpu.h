@@ -32,6 +32,7 @@ typedef struct
     bool stepping;
 
     bool int_master_enabled;
+    bool enabling_ime;
 
 } cpu_context;
 

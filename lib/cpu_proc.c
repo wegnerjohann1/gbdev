@@ -71,6 +71,11 @@ static void proc_di(cpu_context *ctx)
     ctx->int_master_enabled = false;
 }
 
+static void proc_ei(cpu_context *ctx)
+{
+    ctx->enabling_ime = true;
+}
+
 static void proc_xor(cpu_context *ctx)
 {
     ctx->regs.a ^= ctx->fetched_data;
@@ -94,6 +99,7 @@ static IN_PROC processors[] =
     [IN_LD] = proc_ld,
     [IN_JP] = proc_jp,
     [IN_DI] = proc_di,
+    [IN_EI] = proc_ei,
     [IN_XOR] = proc_xor
     //TODO add rest of proc functions for instructions
 };
