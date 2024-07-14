@@ -72,7 +72,6 @@ static void proc_ld(cpu_context *ctx)
 
     if (ctx->cur_inst->mode == AM_HL_SPR)
     {
-        // TODO understand why this work also for subtraction in binary
         // get first 4 bits of both summands and check if any bit after 4th is 1 ie >= 0x10;
         bool hflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x000F) + (cpu_read_reg(ctx->fetched_data) & 0x000F) >= 0x10;
         // get first 8 bits of both summands and check if any bit after 8th is 1 ie >= 0x100;
@@ -126,9 +125,56 @@ static void proc_jr(cpu_context *ctx)
 {
     if (check_cond(ctx))
     {   
-        ctx->regs.PC += ((s8)ctx->fetched_data);
+        ctx->regs.PC += (s8)((ctx->fetched_data) & 0x00FF);
         emu_cycles(1);
     }
+}
+
+static void proc_call(cpu_context *ctx)
+{   
+    if (check_cond(ctx))
+    {
+        emu_cycles(2);
+        stack_push16(ctx->regs.PC);
+        
+        ctx->regs.PC = ctx->fetched_data;
+        emu_cycles(1);
+    }
+}
+
+static void proc_ret(cpu_context *ctx)
+{
+    if (ctx->cur_inst->cond != CT_NONE)
+    {
+        emu_cycles(1);
+    }
+
+    if (check_cond(ctx))
+    {
+        u16 lo = stack_pop();
+        emu_cycles(1);
+
+        u16 hi = stack_pop();
+        emu_cycles(1);
+
+        ctx->regs.PC = (hi << 8) | lo;
+        emu_cycles(1);
+    }
+}
+
+static void proc_reti(cpu_context *ctx)
+{
+    ctx->int_master_enabled = true;
+    proc_ret(ctx);
+}
+
+static void proc_rst(cpu_context *ctx)
+{
+    emu_cycles(2);
+    stack_push16(ctx->regs.PC);
+
+    ctx->regs.PC = ctx->cur_inst->param;
+    emu_cycles(1);
 }
 
 static void proc_pop(cpu_context *ctx)
@@ -161,14 +207,18 @@ static IN_PROC processors[] =
 {
     [IN_NONE] = proc_none,
     [IN_NOP] = proc_nop,
-    [IN_LD] = proc_ld,
-    [IN_JP] = proc_jp,
     [IN_DI] = proc_di,
     [IN_EI] = proc_ei,
     [IN_XOR] = proc_xor,
     [IN_POP] = proc_pop,
     [IN_PUSH] = proc_push,
-    [IN_JR] = proc_jr
+    [IN_LD] = proc_ld,
+    [IN_JP] = proc_jp,
+    [IN_JR] = proc_jr,
+    [IN_RET] = proc_ret,
+    [IN_RETI] = proc_reti,
+    [IN_CALL] = proc_call,
+    [IN_RST] = proc_rst
     //TODO add rest of proc functions for instructions
 };
 
