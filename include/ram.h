@@ -3,7 +3,7 @@
 typedef struct
 {
     u8 wram[0x2000];
-    u8 hram[0x80]; //including Interrupt Enable register IE
+    u8 hram[0x7F]; //including Interrupt Enable register IE
 } ram_context;
 
 u8 wram_read(u16 address);

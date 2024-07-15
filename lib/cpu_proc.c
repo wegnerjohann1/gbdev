@@ -42,6 +42,11 @@ static void cpu_set_flags(cpu_context *ctx, char z, char n, char h, char c)
     }
 }
 
+static bool is_16_bit(reg_type rt)
+{
+    return rt >= RT_AF;
+}
+
 static void proc_none(cpu_context *ctx)
 {
     printf("INVALID INSTRUCTION!\n");
@@ -57,7 +62,7 @@ static void proc_ld(cpu_context *ctx)
 {
     if (ctx->dest_is_mem)
     {
-        if (ctx->cur_inst->reg_2 >= RT_AF)
+        if (is_16_bit(ctx->cur_inst->reg_2))
         {
             emu_cycles(1);
             bus_write(ctx->mem_dest, ctx->fetched_data);
@@ -83,7 +88,7 @@ static void proc_ld(cpu_context *ctx)
         return;
     }
 
-    if (ctx->cur_inst->reg_2 >= RT_AF)
+    if (is_16_bit(ctx->cur_inst->reg_2) >= RT_AF)
     {
         //probaly only LD SP, HL : 0xF9
         cpu_set_reg(ctx->cur_inst->reg_1, ctx->cur_inst->reg_2);
@@ -201,6 +206,59 @@ static void proc_push(cpu_context *ctx)
     stack_push(lo);
     
     emu_cycles(1);
+}
+
+static void proc_inc(cpu_context *ctx)
+{
+    u16 val = cpu_read_reg(ctx->cur_inst->reg_1) + 1;
+
+    if (ctx->cur_inst->reg_1 == RT_HL && ctx->cur_inst->mode == AM_MR)
+    {
+        val = bus_read(cpu_read_reg(RT_HL)) + 1;
+        emu_cycles(1);
+        val &= 0x00FF;
+        bus_write(cpu_read_reg(RT_HL), val);
+        emu_cycles(1);
+    }
+    else
+    {
+        cpu_set_reg(ctx->cur_inst->reg_1, val);
+    }
+
+    if ((ctx->cur_opcode & 0x0F) == 0x03)
+    {
+        emu_cycles(1);
+        return;
+    }
+
+    cpu_set_flags(ctx, val == 0, 0, (val & 0x0F) == 0, -1);
+}
+
+
+static void proc_dec(cpu_context *ctx)
+{
+    u16 val = cpu_read_reg(ctx->cur_inst->reg_1) - 1;
+
+    if (ctx->cur_inst->reg_1 == RT_HL && ctx->cur_inst->mode == AM_MR)
+    {
+        val = bus_read(cpu_read_reg(RT_HL)) - 1;
+        emu_cycles(1);
+        val &= 0x00FF;
+        bus_write(cpu_read_reg(RT_HL), val);
+        emu_cycles(1);
+    }
+    else
+    {
+        cpu_set_reg(ctx->cur_inst->reg_1, val);
+    }
+
+    if ((ctx->cur_opcode & 0x0F) == 0x0B)
+    {
+        emu_cycles(1);
+        return;
+    }
+
+    cpu_set_flags(ctx, val == 0, 1, (val & 0x0F) == 0x0F, -1);
 }
 
 static IN_PROC processors[] = 
