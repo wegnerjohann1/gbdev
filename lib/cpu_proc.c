@@ -88,7 +88,7 @@ static void proc_ld(cpu_context *ctx)
         return;
     }
 
-    if (is_16_bit(ctx->cur_inst->reg_2) >= RT_AF)
+    if (is_16_bit(ctx->cur_inst->reg_2))
     {
         //probaly only LD SP, HL : 0xF9
         cpu_set_reg(ctx->cur_inst->reg_1, ctx->cur_inst->reg_2);
@@ -276,7 +276,9 @@ static IN_PROC processors[] =
     [IN_RET] = proc_ret,
     [IN_RETI] = proc_reti,
     [IN_CALL] = proc_call,
-    [IN_RST] = proc_rst
+    [IN_RST] = proc_rst,
+    [IN_INC] = proc_inc,
+    [IN_DEC] = proc_dec
     //TODO add rest of proc functions for instructions
 };
 
