@@ -17,6 +17,8 @@ u8 wram_read(u16 address)
 
 void wram_write(u16 address, u8 value)
 {
+    //TODO IMPLEMENT WRAM SWITCH
+
     address -= 0xC000;
     
     if (address >= 0x2000)

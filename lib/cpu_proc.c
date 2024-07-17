@@ -110,13 +110,6 @@ static void proc_ei(cpu_context *ctx)
     ctx->enabling_ime = true;
 }
 
-static void proc_xor(cpu_context *ctx)
-{
-    ctx->regs.a ^= ctx->fetched_data;
-    cpu_set_flags(ctx, ctx->regs.a, 0 , 0, 0);
-
-}
-
 static void proc_jp(cpu_context *ctx)
 {
     if (check_cond(ctx))
@@ -336,6 +329,68 @@ static void proc_sbc(cpu_context *ctx)
 
 }
 
+static void proc_and(cpu_context *ctx)
+{
+    ctx->regs.a &= ctx->fetched_data;
+    cpu_set_flags(ctx, ctx->cur_inst->reg_1==0, 0,1,0);
+}
+
+static void proc_xor(cpu_context *ctx)
+{
+    ctx->regs.a ^= ctx->fetched_data & 0xFF;
+    cpu_set_flags(ctx, ctx->cur_inst->reg_1==0, 0,1,0);
+}
+
+static void proc_or(cpu_context *ctx)
+{
+    ctx->regs.a |= ctx->fetched_data & 0xFF;
+    cpu_set_flags(ctx, ctx->cur_inst->reg_1==0, 0,1,0);
+}
+
+static void proc_cp(cpu_context *ctx)
+{
+    int n = (int)ctx->regs.a - (int)ctx->fetched_data;
+    cpu_set_flags(ctx, n==0, 1, ((int)ctx->regs.a & 0xF) - ((int)ctx->fetched_data & 0xF) < 0, n < 0);
+}
+
+static void proc_rrca(cpu_context *ctx)
+{
+    bool b = BIT(ctx->regs.a, 0);
+    ctx->regs.a >>= 1;
+    BIT_SET(ctx->regs.a, 7, b);
+
+    cpu_set_flags(ctx, 0 , 0, 0, b);
+}
+
+static void proc_rra(cpu_context *ctx)
+{
+    cpu_set_flags(ctx, 0, 0, 0, BIT(ctx->regs.a, 0)); // first set flags before bit is shifted out
+
+    ctx->regs.a >>= 1;
+    BIT_SET(ctx->regs.a, 7, CPU_FLAG_C);
+}
+
+static void proc_rlca(cpu_context *ctx)
+{
+    bool b = BIT(ctx->regs.a, 7);
+    ctx->regs.a <<= 1;
+    BIT_SET(ctx->regs.a, 0, b);
+
+    cpu_set_flags(ctx, 0 , 0, 0, b);
+}
+
+static void proc_rla(cpu_context *ctx)
+{
+    cpu_set_flags(ctx, 0, 0, 0, BIT(ctx->regs.a, 7)); // first set flags before bit is shifted out
+
+    ctx->regs.a <<= 1;
+    ctx->regs.a |= CPU_FLAG_C;
+}
+
+static void proc_stop(cpu_context *ctx) {
+    fprintf(stderr, "STOPPING!\n");
+}
+
 static IN_PROC processors[] = 
 {
     [IN_NONE] = proc_none,
@@ -357,7 +412,16 @@ static IN_PROC processors[] =
     [IN_ADD] = proc_add,
     [IN_ADC] = proc_adc,
     [IN_SUB] = proc_sub,
-    [IN_SBC] = proc_sbc
+    [IN_SBC] = proc_sbc,
+    [IN_AND] = proc_and,
+    [IN_XOR] = proc_xor,
+    [IN_OR] = proc_or,
+    [IN_CP] = proc_cp,
+    [IN_RRCA] = proc_rrca,
+    [IN_RRA] = proc_rra,
+    [IN_RLCA] = proc_rlca,
+    [IN_RLA] = proc_rla,
+    [IN_STOP] = proc_stop
     //TODO add rest of proc functions for instructions
 };
 
