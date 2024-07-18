@@ -387,8 +387,26 @@ static void proc_rla(cpu_context *ctx)
     ctx->regs.a |= CPU_FLAG_C;
 }
 
-static void proc_stop(cpu_context *ctx) {
+static void proc_stop(cpu_context *ctx) 
+{
+    //TODO implement stop
     fprintf(stderr, "STOPPING!\n");
+}
+
+static void proc_cpl(cpu_context *ctx)
+{
+    ~ctx->regs.a;
+    cpu_set_flags(ctx, -1, 1, 1, -1);
+}
+
+static void proc_scf(cpu_context *ctx)
+{
+    cpu_set_flags(ctx, -1, 0, 0, 1);
+}
+
+static void proc_ccf(cpu_context *ctx)
+{
+    cpu_set_flags(ctx, -1, 0, 0, !CPU_FLAG_C);
 }
 
 static IN_PROC processors[] = 
@@ -421,7 +439,10 @@ static IN_PROC processors[] =
     [IN_RRA] = proc_rra,
     [IN_RLCA] = proc_rlca,
     [IN_RLA] = proc_rla,
-    [IN_STOP] = proc_stop
+    [IN_STOP] = proc_stop,
+    [IN_CPL] = proc_cpl,
+    [IN_SCF] = proc_scf,
+    [IN_CCF] = proc_ccf
     //TODO add rest of proc functions for instructions
 };
 
