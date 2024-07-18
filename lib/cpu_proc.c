@@ -395,7 +395,7 @@ static void proc_stop(cpu_context *ctx)
 
 static void proc_cpl(cpu_context *ctx)
 {
-    ~ctx->regs.a;
+    ctx->regs.a = ~ctx->regs.a;
     cpu_set_flags(ctx, -1, 1, 1, -1);
 }
 
