@@ -49,16 +49,22 @@ bool cpu_step()
         //printf("Fetching Data for Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
         
         //Debug print
-        printf("%04X: %-7s (%02X %02X %02X) AF: %04X BC: %04X DE: %04X HL: %04X SP: %04X\n",
-            pc, inst_name(ctx.cur_inst->type), ctx.cur_opcode,
-            bus_read(pc + 1), bus_read(pc + 2), cpu_read_reg(RT_AF),
-            cpu_read_reg(RT_BC), cpu_read_reg(RT_DE),
-            cpu_read_reg(RT_HL),  ctx.regs.SP);
+        // prints state of state before the instruction displayed is executed
+
+        char flags[16];
+        sprintf(flags, "%c%c%c%c", ctx.regs.f & (1 << 7) ? 'Z' : '-',
+                ctx.regs.f & (1 << 6) ? 'N' : '-',
+                ctx.regs.f & (1 << 5) ? 'H' : '-',
+                ctx.regs.f & (1 << 4) ? 'C' : '-');
+
+        printf("%08llX - %04X: %-7s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+               emu_get_context() -> ticks, pc, inst_name(ctx.cur_inst->type), ctx.cur_opcode,
+               bus_read(pc + 1), bus_read(pc + 2), ctx.regs.a, flags,
+               ctx.regs.b, ctx.regs.c, ctx.regs.d, ctx.regs.e,
+               ctx.regs.h, ctx.regs.l, ctx.regs.SP);
 
         fetch_data();
 
-        
-        
         //printf("Executing Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
 
         execute();

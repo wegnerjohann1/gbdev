@@ -409,6 +409,11 @@ static void proc_ccf(cpu_context *ctx)
     cpu_set_flags(ctx, -1, 0, 0, !CPU_FLAG_C);
 }
 
+static void proc_cb(cpu_context *ctx)
+{
+    //TODO
+}
+
 static IN_PROC processors[] = 
 {
     [IN_NONE] = proc_none,
@@ -442,7 +447,8 @@ static IN_PROC processors[] =
     [IN_STOP] = proc_stop,
     [IN_CPL] = proc_cpl,
     [IN_SCF] = proc_scf,
-    [IN_CCF] = proc_ccf
+    [IN_CCF] = proc_ccf,
+    [IN_CB] = proc_cb
     //TODO add rest of proc functions for instructions
 };
 
