@@ -409,9 +409,191 @@ static void proc_ccf(cpu_context *ctx)
     cpu_set_flags(ctx, -1, 0, 0, !CPU_FLAG_C);
 }
 
+reg_type rt_lookup[] =
+{
+    RT_B,
+    RT_C,
+    RT_D,
+    RT_E,
+    RT_H,
+    RT_L,
+    RT_HL,
+    RT_A
+};
+
 static void proc_cb(cpu_context *ctx)
 {
-    //TODO
+    u8 opcode = ctx->fetched_data;
+    reg_type rt = rt_lookup[opcode & 0b111];
+    u8 bit_op = opcode >> 6; //BIT RES SET
+    u8 bit = opcode >> 3; //the other instructions
+    u16 reg_val = cpu_read_reg(rt);
+    u8 val;
+
+    if (rt == RT_HL)
+    {
+        val = bus_read(reg_val);
+        emu_cycles(1);
+    }
+    else
+    {
+        val = reg_val;
+    }
+
+    switch (bit_op)
+    {
+    case 1: // BIT
+        cpu_set_flags(ctx, !(val & (1 << bit)), 0, 1, -1);
+        return;
+
+    case 2: // RES
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val & ~(1 << bit));
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val & ~(1 << bit));
+        return;
+
+    case 3: // SET
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val | (1 << bit));
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val | (1 << bit));
+        return;
+    }
+
+    bool flagC = CPU_FLAG_C;
+
+    switch (bit)
+    {
+    case 0: // RLC
+    {
+        bool b = BIT(val, 7);
+        val <<= 1;
+        BIT_SET(val, 0, b);
+        cpu_set_flags(ctx, !val, 0, 0, b);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }
+
+    case 1: // RRC
+    {
+        bool b = BIT(val, 0);
+        val >>= 1;
+        BIT_SET(val, 7, b);
+        cpu_set_flags(ctx, !val, 0, 0, b);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }
+        
+    case 2: // RL
+    {
+        bool b = BIT(val, 7);
+        val <<= 1;
+        BIT_SET(val, 0, flagC);
+        cpu_set_flags(ctx, !val, 0, 0, b);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }
+        
+    case 3: // RR
+    {
+        bool b = BIT(val, 0);
+        val >>= 1;
+        BIT_SET(val, 7, flagC);
+        cpu_set_flags(ctx, !val, 0, 0, b);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }
+        
+    case 4: // SLA
+    {
+        bool b = BIT(val, 7);
+        val <<= 1;
+        cpu_set_flags(ctx, !val, 0, 0, b);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }
+        
+    case 5: // SRA
+    {
+        bool b = BIT(val, 0);
+        val =  (val & 0x80) | (val >> 1);
+        cpu_set_flags(ctx, !val, 0, 0, b);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }    
+        
+    case 6: // SWAP
+    {
+        val = ((val & 0xF0) >> 4) | ((val & 0x0F) << 4);
+        cpu_set_flags(ctx, !val, 0, 0, 0);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }
+        
+    case 7: // SRL
+    {
+        bool b = BIT(val, 0);
+        val >>= 1;
+        cpu_set_flags(ctx, !val, 0, 0, b);
+        if (rt == RT_HL)
+        {
+            bus_write(reg_val, val);
+            emu_cycles(1);
+        }
+        else
+            cpu_set_reg(rt, val);
+        return;
+    }
+    }
 }
 
 static IN_PROC processors[] = 
@@ -449,7 +631,6 @@ static IN_PROC processors[] =
     [IN_SCF] = proc_scf,
     [IN_CCF] = proc_ccf,
     [IN_CB] = proc_cb
-    //TODO add rest of proc functions for instructions
 };
 
 IN_PROC inst_get_processor(in_type type)

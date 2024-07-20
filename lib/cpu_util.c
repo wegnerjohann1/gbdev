@@ -1,12 +1,12 @@
 #include <cpu.h>
+#include <bus.h>
 
 extern cpu_context ctx;
 
 u16 reverse(u16 n)
 {
-    return ((n & 0xFF00) >> 8) | ((n & 0x00FF) << 8);  
+    return ((n & 0xFF00) >> 8) | ((n & 0x00FF) << 8);
 }
-
 
 u16 cpu_read_reg(reg_type rt)
 {
@@ -57,6 +57,8 @@ void cpu_set_reg(reg_type rt, u16 value)
     case RT_NONE: break;
     }
 }
+
+
 
 cpu_registers *cpu_get_regs()
 {
