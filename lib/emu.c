@@ -3,6 +3,8 @@
 #include <cpu.h>
 #include <cart.h>
 #include "raylib.h"
+#include <pthread.h>
+#include <unistd.h>
 
 /*
     Emu components:
@@ -39,6 +41,33 @@ void emu_cycles(int m_cycles)
     //printf("emu_cycles not implemented yet\n");
 }
 
+void *cpu_run(void *p)
+{
+    cpu_init();
+    
+    ctx.running = true;
+    ctx.paused = false;
+    ctx.ticks = 0;
+
+    while (ctx.running)    // Detect window close button or ESC key
+    {   
+        if(ctx.paused)
+        {
+            delay(10);
+            continue;
+        }
+
+        if (!cpu_step())
+        {
+            printf("CPU stopped\n");
+            return 0;
+        }
+
+        ctx.ticks++;
+    }
+    return 0;
+}
+
 int emu_run(int argc, char **argv)
 {
     if(argc < 2)
@@ -55,6 +84,14 @@ int emu_run(int argc, char **argv)
 
     printf("Cart loaded..\n");
 
+    pthread_t t1;
+
+    if (pthread_create(&t1, NULL, cpu_run, NULL))
+    {
+        fprintf(stderr, "FAILED TO START MAIN CPU THREAD!\n");
+        return -1;
+    }
+
     // Initialization
     //--------------------------------------------------------------------------------------
     const int screenWidth = WIDTH * PIXELSIZE;
@@ -65,33 +102,12 @@ int emu_run(int argc, char **argv)
     InitWindow(screenWidth, screenHeight, "gbdev");
     SetTargetFPS(60);
 
-    cpu_init();
-    
-    ctx.running = true;
-    ctx.paused = false;
-    ctx.ticks = 0;
-
-    while (!WindowShouldClose() && ctx.running)    // Detect window close button or ESC key
+    while (!WindowShouldClose())    // Detect window close button or ESC key
     {   
-        if(ctx.paused)
-        {
-            delay(10);
-            continue;
-        }
-
-        if (!cpu_step())
-        {
-            printf("CPU stopped\n");
-            return CPU_STOPPED;
-        }
-        
+        usleep(1000);
         BeginDrawing();
         EndDrawing();
-
-        ctx.ticks++;
     }
-
-
     return 0;
 
 }

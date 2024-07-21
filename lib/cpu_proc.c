@@ -596,6 +596,32 @@ static void proc_cb(cpu_context *ctx)
     }
 }
 
+static void proc_daa(cpu_context *ctx)
+{
+    u8 u = 0;
+    int fc = 0;
+    
+    if (CPU_FLAG_H || (!CPU_FLAG_N && (ctx->regs.a & 0xF) > 9))
+    {
+        u = 6;
+    }
+
+    if (CPU_FLAG_C || (!CPU_FLAG_N && (ctx->regs.a > 0x99)))
+    {
+        u |=  0x60;
+        fc = 1;
+    }
+
+    ctx->regs.a += CPU_FLAG_N ? -u : u;
+
+    cpu_set_flags(ctx, !ctx->regs.a, -1, 0 , fc);
+}
+
+static void proc_halt(cpu_context *ctx)
+{
+    // ctx->halted = true;
+}
+
 static IN_PROC processors[] = 
 {
     [IN_NONE] = proc_none,
@@ -630,7 +656,9 @@ static IN_PROC processors[] =
     [IN_CPL] = proc_cpl,
     [IN_SCF] = proc_scf,
     [IN_CCF] = proc_ccf,
-    [IN_CB] = proc_cb
+    [IN_CB] = proc_cb,
+    [IN_DAA] = proc_daa,
+    [IN_HALT] = proc_halt
 };
 
 IN_PROC inst_get_processor(in_type type)

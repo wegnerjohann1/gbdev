@@ -1,3 +1,5 @@
+#pragma once
+
 #include <defs.h>
 
 u8 bus_read(u16 address);

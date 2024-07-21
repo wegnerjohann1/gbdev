@@ -1,3 +1,5 @@
+#pragma once
+
 #include <defs.h>
 
 void stack_push(u8 data);
