@@ -63,3 +63,5 @@ void cpu_set_ie_register(u8 val);
 u8 cpu_get_int_flags();
 void cpu_set_int_flags(u8 val);
 
+void inst_to_str(cpu_context *ctx, char *str);
+
