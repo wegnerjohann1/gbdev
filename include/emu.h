@@ -7,6 +7,8 @@ typedef struct
     bool paused;
     bool running;
     bool die;
+    bool stepped;
+
     u64 ticks;
 
 } emu_context;

@@ -47,7 +47,10 @@ void *cpu_run(void *p)
     
     ctx.running = true;
     ctx.paused = false;
+    ctx.stepped = true;
     ctx.ticks = 0;
+
+    bool did_step = false;
 
     while (ctx.running)    // Detect window close button or ESC key
     {   
@@ -57,13 +60,28 @@ void *cpu_run(void *p)
             continue;
         }
 
-        if (!cpu_step())
+        if (IsKeyUp(KEY_M))
+            did_step = false;
+
+        if (ctx.stepped)
+        {
+            if (IsKeyPressed(KEY_M) && !did_step)
+            {
+                if (!cpu_step())
+                {
+                    printf("CPU stopped\n");
+                    return 0;
+                }
+                did_step = true;
+            }
+        }
+        else if (!cpu_step())
         {
             printf("CPU stopped\n");
             return 0;
         }
 
-        ctx.ticks++;
+        //ctx.ticks++;
     }
     return 0;
 }
@@ -104,7 +122,6 @@ int emu_run(int argc, char **argv)
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {   
-        usleep(1000);
         BeginDrawing();
         EndDrawing();
     }

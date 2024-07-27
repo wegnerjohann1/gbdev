@@ -2,12 +2,22 @@
 #include <bus.h>
 #include <emu.h>
 #include <interrupts.h>
+#include <dbg.h>
 
 cpu_context ctx = { 0 };
 
 void cpu_init()
 {
     ctx.regs.PC = 0x100;
+    ctx.regs.SP = 0xFFFE;
+    *((short *)&ctx.regs.a) = 0xB001;
+    *((short *)&ctx.regs.b) = 0x1300;
+    *((short *)&ctx.regs.d) = 0xD800;
+    *((short *)&ctx.regs.h) = 0x4D01;
+    ctx.ie_register = 0;
+    ctx.int_flags = 0;
+    ctx.int_master_enabled = false;
+    ctx.enabling_ime = false;
 }
 
 static void fetch_instruction()
@@ -68,7 +78,8 @@ bool cpu_step()
                ctx.regs.b, ctx.regs.c, ctx.regs.d, ctx.regs.e,
                ctx.regs.h, ctx.regs.l, ctx.regs.SP);
 
-        //printf("Executing Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
+        dbg_update();
+        dbg_print();
 
         execute();
 
