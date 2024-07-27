@@ -47,10 +47,11 @@ void *cpu_run(void *p)
     
     ctx.running = true;
     ctx.paused = false;
-    ctx.stepped = true;
+    ctx.stepped = false;
     ctx.ticks = 0;
 
     bool did_step = false;
+    bool did_dump = false;
 
     while (ctx.running)    // Detect window close button or ESC key
     {   
@@ -62,6 +63,9 @@ void *cpu_run(void *p)
 
         if (IsKeyUp(KEY_M))
             did_step = false;
+        
+        if (IsKeyUp(KEY_D))
+            did_dump = false;
 
         if (ctx.stepped)
         {
@@ -74,6 +78,12 @@ void *cpu_run(void *p)
                 }
                 did_step = true;
             }
+
+            if (IsKeyPressed(KEY_D) && !did_dump)
+            {
+                dump(RT_DE);
+                did_dump = true;
+            }
         }
         else if (!cpu_step())
         {
@@ -81,7 +91,7 @@ void *cpu_run(void *p)
             return 0;
         }
 
-        //ctx.ticks++;
+        ctx.ticks++;
     }
     return 0;
 }

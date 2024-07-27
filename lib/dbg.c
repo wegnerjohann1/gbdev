@@ -8,6 +8,7 @@ void dbg_update()
 {
     if (bus_read(0xFF02) == 0x81)
     {
+        printf("READING IO\n");
         char c = bus_read(0xFF01);
 
         dbg_msg[msg_size++] = c;

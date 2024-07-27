@@ -9,15 +9,15 @@ cpu_context ctx = { 0 };
 void cpu_init()
 {
     ctx.regs.PC = 0x100;
-    ctx.regs.SP = 0xFFFE;
-    *((short *)&ctx.regs.a) = 0xB001;
-    *((short *)&ctx.regs.b) = 0x1300;
-    *((short *)&ctx.regs.d) = 0xD800;
-    *((short *)&ctx.regs.h) = 0x4D01;
-    ctx.ie_register = 0;
-    ctx.int_flags = 0;
-    ctx.int_master_enabled = false;
-    ctx.enabling_ime = false;
+    // ctx.regs.SP = 0xFFFE;
+    // *((short *)&ctx.regs.a) = 0xB001;
+    // *((short *)&ctx.regs.b) = 0x1300;
+    // *((short *)&ctx.regs.d) = 0xD800;
+    // *((short *)&ctx.regs.h) = 0x4D01;
+    // ctx.ie_register = 0;
+    // ctx.int_flags = 0;
+    // ctx.int_master_enabled = false;
+    // ctx.enabling_ime = false;
 }
 
 static void fetch_instruction()
@@ -72,11 +72,11 @@ bool cpu_step()
         char inst[16];
         inst_to_str(&ctx, inst);
 
-        printf("%08llX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+        printf("%08llX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X SC: %02X\n",
                emu_get_context() -> ticks, pc, inst, ctx.cur_opcode,
                bus_read(pc + 1), bus_read(pc + 2), ctx.regs.a, flags,
                ctx.regs.b, ctx.regs.c, ctx.regs.d, ctx.regs.e,
-               ctx.regs.h, ctx.regs.l, ctx.regs.SP);
+               ctx.regs.h, ctx.regs.l, ctx.regs.SP, bus_read(0xFF01));
 
         dbg_update();
         dbg_print();
@@ -118,4 +118,16 @@ u8 cpu_get_ie_register()
 void cpu_set_ie_register(u8 val)
 {
     ctx.ie_register = val;
+}
+
+void dump(reg_type rt)
+{
+    u16 address = cpu_read_reg(rt) & 0xFFF0;
+    for (int i = 0; i < 0x10; i++)
+        printf("%02X ", i);
+    printf("\n");
+    for (int i = 0; i < 0x10; i++)
+        printf("%02X ", bus_read(address + i));
+    printf("%04X\n", address);
+    
 }

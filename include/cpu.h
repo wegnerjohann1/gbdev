@@ -65,3 +65,4 @@ void cpu_set_int_flags(u8 val);
 
 void inst_to_str(cpu_context *ctx, char *str);
 
+void dump();
