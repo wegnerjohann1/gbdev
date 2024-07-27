@@ -14,9 +14,9 @@ u8 io_read(u16 address)
         return serial_data[1];
     }
     
-    printf("UNSUPPORTED IO_bus_read(%04X)\n", address);
+    //printf("UNSUPPORTED IO_bus_read(%04X)\n", address);
         //TODO IO Registers
-        return 0;
+    return 0;
 }
 
 void io_write(u16 address, u8 value)
@@ -33,6 +33,6 @@ void io_write(u16 address, u8 value)
         return;
     }
 
-    printf("UNSUPPORTED IO_bus_write(%04X)\n", address);
+    //printf("UNSUPPORTED IO_bus_write(%04X)\n", address);
         //TODO IO Registers
 }

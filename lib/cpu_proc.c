@@ -64,8 +64,6 @@ static void proc_ld(cpu_context *ctx)
     {
         if (is_16_bit(ctx->cur_inst->reg_2))
         {
-            printf("does that ever happen?\n"); // I dont think this case ever happens
-            exit(-6);
             emu_cycles(1);
             bus_write(ctx->mem_dest, ctx->fetched_data);
         }
@@ -334,19 +332,19 @@ static void proc_sbc(cpu_context *ctx)
 static void proc_and(cpu_context *ctx)
 {
     ctx->regs.a &= ctx->fetched_data;
-    cpu_set_flags(ctx, ctx->cur_inst->reg_1==0, 0,1,0);
+    cpu_set_flags(ctx, ctx->regs.a == 0, 0, 1, 0);
 }
 
 static void proc_xor(cpu_context *ctx)
 {
     ctx->regs.a ^= ctx->fetched_data & 0xFF;
-    cpu_set_flags(ctx, ctx->cur_inst->reg_1==0, 0,1,0);
+    cpu_set_flags(ctx, ctx->regs.a == 0, 0, 0, 0);
 }
 
 static void proc_or(cpu_context *ctx)
 {
     ctx->regs.a |= ctx->fetched_data & 0xFF;
-    cpu_set_flags(ctx, ctx->cur_inst->reg_1==0, 0,1,0);
+    cpu_set_flags(ctx, ctx->regs.a == 0, 0, 0, 0);
 }
 
 static void proc_cp(cpu_context *ctx)
@@ -366,10 +364,11 @@ static void proc_rrca(cpu_context *ctx)
 
 static void proc_rra(cpu_context *ctx)
 {
+    bool b = CPU_FLAG_C;
     cpu_set_flags(ctx, 0, 0, 0, BIT(ctx->regs.a, 0)); // first set flags before bit is shifted out
 
     ctx->regs.a >>= 1;
-    BIT_SET(ctx->regs.a, 7, CPU_FLAG_C);
+    BIT_SET(ctx->regs.a, 7, b);
 }
 
 static void proc_rlca(cpu_context *ctx)

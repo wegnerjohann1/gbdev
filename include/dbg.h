@@ -3,5 +3,5 @@
 #include <defs.h>
 #include <cpu.h>
 
-void dbg_update();
+bool dbg_update();
 void dbg_print();

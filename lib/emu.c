@@ -90,7 +90,9 @@ void *cpu_run(void *p)
             printf("CPU stopped\n");
             return 0;
         }
-
+        usleep(1);
+        // if (ctx.ticks == 0x1D538)
+        //     ctx.stepped = true;
         ctx.ticks++;
     }
     return 0;
