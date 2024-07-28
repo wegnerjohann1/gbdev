@@ -40,6 +40,7 @@ static void cpu_set_flags(cpu_context *ctx, char z, char n, char h, char c)
     {
         BIT_SET(ctx->regs.f, 4, c)
     }
+    ctx->regs.f &= 0xF0;
 }
 
 static bool is_16_bit(reg_type rt)

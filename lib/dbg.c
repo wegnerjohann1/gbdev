@@ -23,15 +23,17 @@ bool dbg_update()
 
 void dbg_print()
 {
-    if (dbg_msg[0])
-    {
-        printf("DBG: %s\n", dbg_msg);
-    }
-
-    // if (strstr(dbg_msg, "Passed") && !passed)
+    // if (dbg_msg[0])
     // {
-    //     passed = true;
     //     printf("DBG: %s\n", dbg_msg);
     // }
+
+    char substr[] = "Passed";
+    if ((strstr(dbg_msg, substr) != NULL) && !passed)
+    {
+        passed = true;
+        printf("DBG: %s\n", dbg_msg);
+        exit(TEST_PASSED);
+    }
         
 }

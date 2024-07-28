@@ -22,6 +22,7 @@ typedef int64_t s64;
 #define NOT_IMPLEMENTED -5
 #define UNKNOWN_INSTRUCTION -7
 #define MEMORY_OUT_OF_RANGE -8
+#define TEST_PASSED -9
 
 
 #define BIT(a, n) ((a & (1 << n)) ? 1 : 0)
