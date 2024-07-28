@@ -5,6 +5,7 @@
 #include "raylib.h"
 #include <pthread.h>
 #include <unistd.h>
+#include <timer.h>
 
 /*
     Emu components:
@@ -38,11 +39,19 @@ void delay(u32 ms)
 
 void emu_cycles(int m_cycles)
 {
-    //printf("emu_cycles not implemented yet\n");
+    for (int n = 0; n < m_cycles; n++)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            ctx.ticks++;
+            timer_tick();
+        }
+    }
 }
 
 void *cpu_run(void *p)
 {
+    timer_init();
     cpu_init();
     
     ctx.running = true;
@@ -52,6 +61,7 @@ void *cpu_run(void *p)
 
     bool did_step = false;
     bool did_dump = false;
+    bool did_press_step = false;
 
     while (ctx.running)    // Detect window close button or ESC key
     {   
@@ -66,7 +76,16 @@ void *cpu_run(void *p)
         
         if (IsKeyUp(KEY_D))
             did_dump = false;
-
+        
+        if (IsKeyPressed(KEY_F1) && !did_press_step)
+        {
+            ctx.stepped = !ctx.stepped;
+            did_press_step = true;
+        } else if (IsKeyUp(KEY_F1))
+        {
+            did_press_step = false;
+        }
+            
         if (ctx.stepped)
         {
             if (IsKeyPressed(KEY_M) && !did_step)
@@ -90,10 +109,6 @@ void *cpu_run(void *p)
             printf("CPU stopped\n");
             return 0;
         }
-        usleep(1);
-        // if (ctx.ticks == 0x1D538)
-        //     ctx.stepped = true;
-        ctx.ticks++;
     }
     return 0;
 }

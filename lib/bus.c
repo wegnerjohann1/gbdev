@@ -92,7 +92,7 @@ void bus_write(u16 address, u8 value)
     }
     else if (address < 0xA000)
     {
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
+        //printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement VRAM
 
     }
