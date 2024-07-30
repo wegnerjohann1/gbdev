@@ -40,7 +40,7 @@ static void cpu_set_flags(cpu_context *ctx, char z, char n, char h, char c)
     {
         BIT_SET(ctx->regs.f, 4, c)
     }
-    ctx->regs.f &= 0xF0;
+    //ctx->regs.f &= 0xF0;
 }
 
 static bool is_16_bit(reg_type rt)
@@ -383,10 +383,11 @@ static void proc_rlca(cpu_context *ctx)
 
 static void proc_rla(cpu_context *ctx)
 {
-    cpu_set_flags(ctx, 0, 0, 0, BIT(ctx->regs.a, 7)); // first set flags before bit is shifted out
-
+    bool b = BIT(ctx->regs.a, 7);
     ctx->regs.a <<= 1;
     ctx->regs.a |= CPU_FLAG_C;
+
+    cpu_set_flags(ctx, 0, 0, 0, b);
 }
 
 static void proc_stop(cpu_context *ctx) 
@@ -427,8 +428,8 @@ static void proc_cb(cpu_context *ctx)
 {
     u8 opcode = ctx->fetched_data;
     reg_type rt = rt_lookup[opcode & 0b111];
-    u8 bit_op = opcode >> 6; //BIT RES SET
-    u8 bit = opcode >> 3; //the other instructions
+    u8 bit_op = (opcode >> 6) & 0b11; //BIT RES SET
+    u8 bit = (opcode >> 3) & 0b111; //the other instructions
     u16 reg_val = cpu_read_reg(rt);
     u8 val;
 
