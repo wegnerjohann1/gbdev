@@ -24,19 +24,19 @@ void timer_tick()
     switch (ctx.tac & (0b11))
     {
     case 0b00:
-        timer_update = (prev_div & (1 << 9)) && !(ctx.div & (1 << 9));
+        timer_update = (prev_div & (1 << 9)) && (!(ctx.div & (1 << 9)));
         break;
     
     case 0b01:
-        timer_update = (prev_div & (1 << 3)) && !(ctx.div & (1 << 3));
+        timer_update = (prev_div & (1 << 3)) && (!(ctx.div & (1 << 3)));
         break;
     
     case 0b10:
-        timer_update = (prev_div & (1 << 5)) && !(ctx.div & (1 << 5));
+        timer_update = (prev_div & (1 << 5)) && (!(ctx.div & (1 << 5)));
         break;
     
     case 0b11:
-        timer_update = (prev_div & (1 << 7)) && !(ctx.div & (1 << 7));
+        timer_update = (prev_div & (1 << 7)) && (!(ctx.div & (1 << 7)));
         break;
     }
 

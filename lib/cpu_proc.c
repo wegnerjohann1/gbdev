@@ -66,7 +66,7 @@ static void proc_ld(cpu_context *ctx)
         if (is_16_bit(ctx->cur_inst->reg_2))
         {
             emu_cycles(1);
-            bus_write(ctx->mem_dest, ctx->fetched_data);
+            bus_write16(ctx->mem_dest, ctx->fetched_data);
         }
         else
         {
@@ -81,12 +81,12 @@ static void proc_ld(cpu_context *ctx)
     if (ctx->cur_inst->mode == AM_HL_SPR)
     {
         // get first 4 bits of both summands and check if any bit after 4th is 1 ie >= 0x10;
-        bool hflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x000F) + (cpu_read_reg(ctx->fetched_data) & 0x000F) >= 0x10;
+        u8 hflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x000F) + (ctx->fetched_data & 0x000F) >= 0x10;
         // get first 8 bits of both summands and check if any bit after 8th is 1 ie >= 0x100;
-        bool cflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x00FF) + (cpu_read_reg(ctx->fetched_data) & 0x00FF) >= 0x100;
+        u8 cflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0x00FF) + (ctx->fetched_data & 0x00FF) >= 0x100;
 
         cpu_set_flags(ctx, 0, 0, hflag, cflag);
-        cpu_set_reg(ctx->cur_inst->reg_1, ctx->cur_inst->reg_2 + (s8)ctx->fetched_data);
+        cpu_set_reg(ctx->cur_inst->reg_1, cpu_read_reg(ctx->cur_inst->reg_2) + (s8)ctx->fetched_data);
         emu_cycles(1);
         return;
     }
@@ -622,7 +622,7 @@ static void proc_daa(cpu_context *ctx)
 
 static void proc_halt(cpu_context *ctx)
 {
-    // ctx->halted = true;
+    ctx->halted = true;
 }
 
 static IN_PROC processors[] = 

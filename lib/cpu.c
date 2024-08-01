@@ -20,7 +20,7 @@ void cpu_init()
     ctx.int_master_enabled = false;
     ctx.enabling_ime = false;
 
-    timer_get_context()->div = 0xAB00;
+    timer_get_context()->div = 0xABCC;
 }
 
 static void fetch_instruction()
