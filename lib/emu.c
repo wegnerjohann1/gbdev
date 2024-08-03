@@ -56,7 +56,7 @@ void *cpu_run(void *p)
     
     ctx.running = true;
     ctx.paused = false;
-    ctx.stepped = false;
+    ctx.stepped = true;
     ctx.ticks = 0;
 
     bool did_step = false;
