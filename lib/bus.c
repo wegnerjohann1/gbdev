@@ -3,6 +3,7 @@
 #include <ram.h>
 #include <cpu.h>
 #include <io.h>
+#include <ppu.h>
 
 // 0x0000 - 0x3FFF : ROM Bank 0
 // 0x4000 - 0x7FFF : ROM Bank 1 - Switchable
@@ -26,9 +27,7 @@ u8 bus_read(u16 address)
     } 
     else if (address < 0xA000)
     {
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
-        //TODO Implement VRAM
-        return 0;
+        return ppu_vram_read(address);
     }
     else if (address < 0xC000)
     {
@@ -38,8 +37,6 @@ u8 bus_read(u16 address)
     }
     else if (address < 0xE000)
     {
-        //printf("UNSUPPORTED bus_read(%04X)\n", address);
-        //TODO Implement WRAM
         return wram_read(address);
     }
     else if (address < 0xFE00)
@@ -50,13 +47,12 @@ u8 bus_read(u16 address)
     }
     else if (address < 0xFEA0)
     {
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
-        //TODO Implement OAM Object attribute memory
-        return 0;
+        return ppu_oam_read(address);
     }
     else if (address < 0xFF00)
     {
         printf("UNSUPPORTED bus_read(%04X)\n", address);
+        printf("ACCESS OF NINTENDO PROHIBITED MEMORY AREA\n");
         //TODO Nintendo prohibited AREA
         return 0;
     }
@@ -66,14 +62,10 @@ u8 bus_read(u16 address)
     }
     else if (address < 0xFFFF)
     {
-        //printf("UNSUPPORTED bus_read(%04X)\n", address);
-        //TODO Implement HRAM
         return hram_read(address);
     }
     else if (address == 0xFFFF)
     {
-        //printf("UNSUPPORTED bus_read(%04X)\n", address);
-        //TODO Interrupt enable register
         return cpu_get_ie_register();
     }
     else
@@ -92,38 +84,31 @@ void bus_write(u16 address, u8 value)
     }
     else if (address < 0xA000)
     {
-        //printf("UNSUPPORTED bus_write(%04X)\n", address);
-        //TODO Implement VRAM
-
+        ppu_vram_write(address, value);
     }
     else if (address < 0xC000)
     {
         printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement external RAM
-
     }
     else if (address < 0xE000)
     {
-        //printf("UNSUPPORTED bus_write(%04X)\n", address);
-        //TODO Implement WRAM
         wram_write(address, value);
     }
     else if (address < 0xFE00)
     {
         printf("UNSUPPORTED bus_write(%04X)\n", address);
         //TODO Implement Echo RAM
-
     }
     else if (address < 0xFEA0)
     {
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
-        //TODO Implement OAM Object attribute memory
+        ppu_oam_write(address, value);
     }
     else if (address < 0xFF00)
     {
         printf("UNSUPPORTED bus_write(%04X)\n", address);
+        printf("ACCESS OF NINTENDO PROHIBITED MEMORY AREA\n");
         //TODO Nintendo prohibited AREA
-
     }
     else if (address < 0xFF80)
     {

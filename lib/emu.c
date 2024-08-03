@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <timer.h>
+#include <ui.h>
 
 /*
     Emu components:
@@ -128,6 +129,8 @@ int emu_run(int argc, char **argv)
     }
 
     printf("Cart loaded..\n");
+
+    ui_init();
 
     pthread_t t1;
 
