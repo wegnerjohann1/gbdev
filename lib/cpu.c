@@ -71,11 +71,11 @@ bool cpu_step()
         char inst[16];
         inst_to_str(&ctx, inst);
 
-        printf("%08llX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X DIV: %02X\n",
-               emu_get_context() -> ticks, pc, inst, ctx.cur_opcode,
-               bus_read(pc + 1), bus_read(pc + 2), ctx.regs.a, flags,
-               ctx.regs.b, ctx.regs.c, ctx.regs.d, ctx.regs.e,
-               ctx.regs.h, ctx.regs.l, ctx.regs.SP, bus_read(0xFF04));
+        // printf("%08llX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X DIV: %02X\n",
+        //        emu_get_context() -> ticks, pc, inst, ctx.cur_opcode,
+        //        bus_read(pc + 1), bus_read(pc + 2), ctx.regs.a, flags,
+        //        ctx.regs.b, ctx.regs.c, ctx.regs.d, ctx.regs.e,
+        //        ctx.regs.h, ctx.regs.l, ctx.regs.SP, bus_read(0xFF04));
 
         if (dbg_update())
             dbg_print();

@@ -51,6 +51,10 @@ void ppu_vram_write(u16 address, u8 value)
         printf("Invalid VRAM Address: %04X", address);
         exit(MEMORY_OUT_OF_RANGE);
     }
+    else if (address >= 0x8000)
+    {
+        address -= 0x8000;
+    }
     ctx.vram[address] = value;
 }
 
@@ -60,6 +64,10 @@ u8 ppu_vram_read(u16 address)
     {
         printf("Invalid VRAM Address: %04X", address);
         exit(MEMORY_OUT_OF_RANGE);
+    }
+    else if (address >= 0x8000)
+    {
+        address -= 0x8000;
     }
     return ctx.vram[address];
 }
