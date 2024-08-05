@@ -4,9 +4,10 @@
 #include <cart.h>
 #include "raylib.h"
 #include <pthread.h>
-#include <unistd.h>
 #include <timer.h>
 #include <ui.h>
+#include <dma.h>
+#include <unistd.h>
 
 /*
     Emu components:
@@ -35,6 +36,7 @@ void emu_cycles(int m_cycles)
             ctx.ticks++;
             timer_tick();
         }
+        dma_tick();
     }
 }
 
@@ -57,7 +59,7 @@ void *cpu_run(void *p)
         usleep(100);
         if(ctx.paused)
         {
-            usleep(10);
+            _sleep(10);
             continue;
         }
 
