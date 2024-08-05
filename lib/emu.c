@@ -131,14 +131,13 @@ int emu_run(int argc, char **argv)
         fprintf(stderr, "FAILED TO START MAIN CPU THREAD!\n");
         return -1;
     }
-    
-    int xDraw = 0;
-    int yDraw = 0;
-    int tileNum = 0;
-
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {   
+        int xDraw = 0;
+        int yDraw = 0;
+        int tileNum = 0;
+
         BeginDrawing();
         ClearBackground(GetColor(0x111111FF));
 
@@ -154,7 +153,6 @@ int emu_run(int argc, char **argv)
             yDraw += (8 * 4);
             xDraw = 0;
         }
-
         EndDrawing();
     }
 

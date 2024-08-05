@@ -31,9 +31,7 @@ u8 bus_read(u16 address)
     }
     else if (address < 0xC000)
     {
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
-        //TODO Implement external CART RAM
-        return 0;
+        return cart_read(address);
     }
     else if (address < 0xE000)
     {
@@ -43,6 +41,7 @@ u8 bus_read(u16 address)
     {
         printf("UNSUPPORTED bus_read(%04X)\n", address);
         //TODO Implement Echo RAM
+        //TODO WHY DO I GET INTO HERE AND IT SPAMS THIS FUNCTION OVER THE WHOLE RANGE?!?!??!?!
         return 0;
     }
     else if (address < 0xFEA0)
@@ -88,8 +87,7 @@ void bus_write(u16 address, u8 value)
     }
     else if (address < 0xC000)
     {
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
-        //TODO Implement external RAM
+        cart_write(address, value);
     }
     else if (address < 0xE000)
     {

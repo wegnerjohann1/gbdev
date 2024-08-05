@@ -33,7 +33,7 @@ void dbg_print()
     {
         passed = true;
         printf("DBG: %s\n", dbg_msg);
-        exit(TEST_PASSED);
+        //exit(TEST_PASSED);
     }
         
 }
