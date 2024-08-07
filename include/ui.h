@@ -2,7 +2,7 @@
 
 #include <defs.h>
 
-static const int SCREEN_WIDTH = 1024;
+static const int SCREEN_WIDTH = 1152;
 static const int SCREEN_HEIGHT = 768;
 
 void ui_init();
