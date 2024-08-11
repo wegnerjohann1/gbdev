@@ -19,6 +19,7 @@ typedef int64_t s64;
 #define WRONG_EXE_USAGE -1
 #define FAILED_ROM_LOAD -2
 #define CPU_STOPPED -3
+#define UNDEFINED_BEHAVIOUR -4
 #define NOT_IMPLEMENTED -5
 #define UNKNOWN_INSTRUCTION -7
 #define MEMORY_OUT_OF_RANGE -8

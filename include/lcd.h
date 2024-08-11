@@ -12,7 +12,7 @@ typedef struct
     u8 ly;
     u8 ly_compare;
     u8 dma;
-    u8 bgp_palette;
+    u8 bg_palette;
     u8 obj_palette[2];
     u8 win_y;
     u8 win_x;
@@ -63,10 +63,3 @@ void lcd_init();
 
 u8 lcd_read(u16 address);
 void lcd_write(u16 address, u8 value);
-
-// LYC int select (Read/Write): If set, selects the LYC == LY condition for the STAT interrupt.
-// Mode 2 int select (Read/Write): If set, selects the Mode 2 condition for the STAT interrupt.
-// Mode 1 int select (Read/Write): If set, selects the Mode 1 condition for the STAT interrupt.
-// Mode 0 int select (Read/Write): If set, selects the Mode 0 condition for the STAT interrupt.
-// LYC == LY (Read-only): Set when LY contains the same value as LYC; it is constantly updated.
-// PPU mode (Read-only): Indicates the PPU’s current status.
