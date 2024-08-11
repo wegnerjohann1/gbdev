@@ -14,6 +14,7 @@ void ui_init()
 
 //static u32 tile_colors[4] = {0xFFFFFFFF, 0xAAAAAAFF, 0x555555FF, 0x000000FF}; //BLACK AND WHITE 
 static u32 tile_colors[4] = {0x081820FF, 0x346856FF, 0x88c070FF, 0xe0f8d0FF}; // GB GREEN
+//static u32 tile_colors[4] = {0xe0f8d0FF, 0x88c070FF, 0x346856FF, 0x081820FF}; // GB GREEN REVERSED
 
 void draw_tile(u16 startLocation, u16 tileNum, int x, int y)
 {

@@ -56,7 +56,7 @@ void *cpu_run(void *p)
 
     while (ctx.running)    // Detect window close button or ESC key
     {   
-        usleep(100);
+        //usleep(100);
         if(ctx.paused)
         {
             _sleep(10);

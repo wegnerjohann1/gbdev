@@ -46,15 +46,19 @@ u8 lcd_read(u16 address)
 
 void update_palette(u8 palette_data, u8 pal)
 {
-    u32 *p_colors = ctx.bg_colors;
+    u32 *p_colors;
 
     switch (pal)
     {
+    case 0:
+        p_colors = ctx.bg_colors;
+        break;
     case 1:
         p_colors = ctx.sp1_colors;
         break;
     case 2:
         p_colors = ctx.sp2_colors;
+        break;
     default:
         printf("NOT A VALID PALETTE NUMBER\n");
         exit(UNDEFINED_BEHAVIOUR);
@@ -79,6 +83,7 @@ void lcd_write(u16 address, u8 value)
     {
         //0xFF46 DMA
         dma_start(value);
+        printf("DMA START!\n");
     }
     if (offset == 7)
     {

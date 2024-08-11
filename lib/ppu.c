@@ -1,4 +1,7 @@
 #include <ppu.h>
+#include <lcd.h>
+#include <string.h>
+#include <ppu_sm.h>
 
 static ppu_context ctx = {0};
 
