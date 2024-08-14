@@ -42,6 +42,16 @@ void draw_tile(u16 startLocation, u16 tileNum, int x, int y)
         }
 }
 
+u32 get_ticks()
+{
+    return (u32)(GetTime() * 1000);
+}
+
+void delay(u32 ms)
+{
+    WaitTime((double) ms / 1000.);
+}
+
 void ui_handle_events()
 {
 

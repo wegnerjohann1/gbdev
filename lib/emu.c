@@ -8,6 +8,7 @@
 #include <ui.h>
 #include <dma.h>
 #include <unistd.h>
+#include <ppu.h>
 
 /*
     Emu components:
@@ -35,6 +36,7 @@ void emu_cycles(int m_cycles)
         {
             ctx.ticks++;
             timer_tick();
+            ppu_tick();
         }
         dma_tick();
     }

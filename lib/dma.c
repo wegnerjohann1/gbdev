@@ -39,7 +39,6 @@ void dma_tick()
 
     if (!ctx.active)
     {
-        printf("DMA DONE\n");
         usleep(2);
     }
 }

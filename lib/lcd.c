@@ -78,12 +78,10 @@ void lcd_write(u16 address, u8 value)
     u8 offset = (address - 0xFF40);
     u8 *p = (u8 *)&ctx;
     p[offset] = value;
-    
     if (offset == 6)
     {
         //0xFF46 DMA
         dma_start(value);
-        printf("DMA START!\n");
     }
     if (offset == 7)
     {

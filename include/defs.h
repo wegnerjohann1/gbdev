@@ -30,6 +30,7 @@ typedef int64_t s64;
 #define BIT_SET(a, n, on) { if (on) a |= (1 << n); else a &= ~(1 << n); }
 #define BETWEEN(a, b, c) ((a >= b) && (a <= c))
 
+u32 get_ticks();
 void delay(u32 ms);
 
 #define NO_IMPL { fprintf(stderr, "NOT YET IMPLEMENTED\n"); exit(NOT_IMPLEMENTED); }

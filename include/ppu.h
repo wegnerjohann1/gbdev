@@ -2,6 +2,11 @@
 
 #include <defs.h>
 
+static const int LINES_PER_FRAME = 154;
+static const int TICKS_PER_LINE = 456;
+static const int YRES = 144;
+static const int XRES = 160;
+
 typedef struct
 {
     u8 y;
@@ -21,7 +26,13 @@ typedef struct
 {
     oam_entry oam_ram[40];
     u8 vram[0x2000];
+
+    u32 current_frame;
+    u32 line_ticks;
+    u32 *video_buffer;
 } ppu_context;
+
+ppu_context *ppu_get_context();
 
 void ppu_init();
 void ppu_tick();
