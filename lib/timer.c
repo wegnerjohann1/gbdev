@@ -1,5 +1,6 @@
 #include <timer.h>
 #include <interrupts.h>
+#include <apu.h>
 
 static timer_context ctx = {0};
 
@@ -18,6 +19,8 @@ void timer_tick()
     u16 prev_div = ctx.div;
     
     ctx.div++; //div counts t_cycles
+
+    if (BIT(prev_div, 5) && !BIT(ctx.div, 5)) apu_tick(); // maybe change to bit 4
 
     bool timer_update = false;
     

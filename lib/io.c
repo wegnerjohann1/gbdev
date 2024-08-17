@@ -3,6 +3,7 @@
 #include <timer.h>
 #include <dma.h>
 #include <lcd.h>
+#include <apu.h>
 
 static char serial_data[2];
 
@@ -26,6 +27,11 @@ u8 io_read(u16 address)
     if (address == 0xFF0F)
     {
         return cpu_get_int_flags();
+    }
+
+    if (BETWEEN(address, 0xFF10, 0xFF3F))
+    {
+        return apu_read(address);
     }
 
     if (BETWEEN(address, 0xFF40, 0xFF4B))
@@ -60,6 +66,11 @@ void io_write(u16 address, u8 value)
     if (address == 0xFF0F)
     {
         return cpu_set_int_flags(value);
+    }
+
+    if (BETWEEN(address, 0xFF10, 0xFF3F))
+    {
+        apu_write(address, value);
     }
 
     if (BETWEEN(address, 0xFF40, 0xFF4B))
