@@ -53,7 +53,7 @@ bool pipeline_fifo_add()
     {
         int bit = 7 - i;
         u8 hi = !!(ppu_get_context()->pfc.bgw_fetch_data[1] & (1<<bit));
-        u8 lo = !!(ppu_get_context()->pfc.bgw_fetch_data[1] & (1<<bit)) << 1;
+        u8 lo = !!(ppu_get_context()->pfc.bgw_fetch_data[2] & (1<<bit)) << 1;
         u32 color = lcd_get_context()->bg_colors[hi | lo];
 
         if (x >= 0)

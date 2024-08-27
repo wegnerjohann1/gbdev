@@ -80,8 +80,8 @@ bool cpu_step()
                ctx.regs.h, ctx.regs.l, ctx.regs.SP, bus_read(0xFF04));
 #endif
 
-        if (dbg_update())
-            dbg_print();
+        // if (dbg_update())
+        //     dbg_print();
 
         execute();
 

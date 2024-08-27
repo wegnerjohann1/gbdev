@@ -46,6 +46,7 @@ void *cpu_run(void *p)
 {
     timer_init();
     cpu_init();
+    ppu_init();
     
     ctx.running = true;
     ctx.paused = false;
@@ -157,6 +158,9 @@ int emu_run(int argc, char **argv)
             yDraw += (8 * 4);
             xDraw = 0;
         }
+
+        ui_update();
+
         EndDrawing();
     }
 

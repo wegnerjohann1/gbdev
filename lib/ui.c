@@ -1,6 +1,7 @@
 #include <ui.h>
 #include <bus.h>
 #include <raylib.h>
+#include <ppu.h>
 
 static int scale = 4;
 
@@ -20,26 +21,26 @@ void draw_tile(u16 startLocation, u16 tileNum, int x, int y)
 {
     Rectangle rc;
 
-        for (int tileY = 0; tileY < 16; tileY += 2)
+    for (int tileY = 0; tileY < 16; tileY += 2)
+    {
+        u8 b1 = bus_read(startLocation + (tileNum * 16) + tileY);
+        u8 b2 = bus_read(startLocation + (tileNum * 16) + tileY + 1);
+
+        for (int bit = 7; bit >= 0; bit--)
         {
-            u8 b1 = bus_read(startLocation + (tileNum * 16) + tileY);
-            u8 b2 = bus_read(startLocation + (tileNum * 16) + tileY + 1);
-            
-            for (int bit = 7; bit >= 0; bit--)
-            {
-                u8 hi = !!(b1 & (1 << bit)) << 1;
-                u8 lo = !!(b2 & (1 << bit));
+            u8 hi = !!(b1 & (1 << bit)) << 1;
+            u8 lo = !!(b2 & (1 << bit));
 
-                Color cl = GetColor(tile_colors[hi | lo]);
+            Color cl = GetColor(tile_colors[hi | lo]);
 
-                rc.x = x + (7-bit) * scale;
-                rc.y = y + (tileY / 2) * scale;
-                rc.width = scale;
-                rc.height = scale;
+            rc.x = x + (7 - bit) * scale;
+            rc.y = y + (tileY / 2) * scale;
+            rc.width = scale;
+            rc.height = scale;
 
-                DrawRectangleRec(rc, cl);
-            }
+            DrawRectangleRec(rc, cl);
         }
+    }
 }
 
 u32 get_ticks()
@@ -59,5 +60,25 @@ void ui_handle_events()
 
 void ui_update()
 {
+    Rectangle rc;
+    rc.x = rc.y = 0;
+    rc.width = rc.height = 2048;
+    int offset_x = 32 * 16;
 
+    u32 *videobuffer = ppu_get_context()->video_buffer;
+
+    for (int line_num = 0; line_num < YRES; line_num++)
+    {
+        for (int x = 0; x < XRES; x++)
+        {
+            rc.x = x * scale + offset_x;
+            rc.y = line_num * scale;
+            rc.width = scale;
+            rc.height = scale;
+
+            Color cl = GetColor(videobuffer[x + (line_num * XRES)]);
+
+            DrawRectangleRec(rc, cl);
+        }
+    }
 }
