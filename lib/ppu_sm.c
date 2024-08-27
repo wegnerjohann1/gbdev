@@ -3,6 +3,9 @@
 #include <cpu.h>
 #include <interrupts.h>
 
+void pipeline_process();
+void pipeline_fifo_reset();
+
 void increment_ly()
 {
     lcd_get_context()->ly++;
