@@ -1,9 +1,0 @@
-*.exe
-Makefile
-test.c
-gb-test-roms
-error_codes
-dbg.txt
-Gb_Snd_Emu-0.1.4
-.vscode
-.gitignore
