@@ -1,6 +1,7 @@
+#include <defs.h>
 #include <dma.h>
 #include <bus.h>
-#include <unistd.h>
+
 
 typedef struct
 {
@@ -31,15 +32,16 @@ void dma_tick()
         return;
     }
 
-    bus_write(0xFE00 + ctx.byte, bus_read(ctx.value * 0x100 + ctx.byte));
-
+    //bus_write(0xFE00 + ctx.byte, bus_read(ctx.value * 0x100 + ctx.byte));
+    ppu_oam_write(ctx.byte, bus_read((ctx.value * 0x100) + ctx.byte));
+    
     ctx.byte++;
 
     ctx.active = ctx.byte < 0xA0;
 
     if (!ctx.active)
     {
-        usleep(2);
+        usleep(2000);
     }
 }
 

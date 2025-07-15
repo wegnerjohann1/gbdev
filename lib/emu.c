@@ -7,8 +7,8 @@
 #include <timer.h>
 #include <ui.h>
 #include <dma.h>
-#include <unistd.h>
 #include <ppu.h>
+#include <apu.h>
 
 /*
     Emu components:
@@ -30,13 +30,14 @@ emu_context* emu_get_context()
 
 void emu_cycles(int m_cycles)
 {
-    for (int n = 0; n < m_cycles; n++)
+    for (int n = 0; n < m_cycles; n++) // cycles at ~1MHz
     {
         for (int i = 0; i < 4; i++)
         {
             ctx.ticks++;
             timer_tick();
             ppu_tick();
+            apu_tick();
         }
         dma_tick();
     }
@@ -62,7 +63,7 @@ void *cpu_run(void *p)
         //usleep(100);
         if(ctx.paused)
         {
-            _sleep(10);
+            usleep(10000);
             continue;
         }
 

@@ -22,115 +22,78 @@
 
 u8 bus_read(u16 address)
 {
-    if (address < 0x8000)
-    {
+    if (address < 0x8000) {
+        //ROM Data
         return cart_read(address);
-    } 
-    else if (address < 0xA000)
-    {
+    } else if (address < 0xA000) {
+        //Char/Map Data
         return ppu_vram_read(address);
-    }
-    else if (address < 0xC000)
-    {
+    } else if (address < 0xC000) {
+        //Cartridge RAM
         return cart_read(address);
-    }
-    else if (address < 0xE000)
-    {
+    } else if (address < 0xE000) {
+        //WRAM (Working RAM)
         return wram_read(address);
-    }
-    else if (address < 0xFE00)
-    {
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
-        //TODO Implement Echo RAM
-        //TODO WHY DO I GET INTO HERE AND IT SPAMS THIS FUNCTION OVER THE WHOLE RANGE?!?!??!?!
+    } else if (address < 0xFE00) {
+        //reserved echo ram...
         return 0;
-    }
-    else if (address < 0xFEA0)
-    {
-        if (dma_transferring())
+    } else if (address < 0xFEA0) {
+        //OAM
+        if (dma_transferring()) {
             return 0xFF;
-        
+        }
+
         return ppu_oam_read(address);
-    }
-    else if (address < 0xFF00)
-    {
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
-        printf("ACCESS OF NINTENDO PROHIBITED MEMORY AREA\n");
-        //TODO Nintendo prohibited AREA
+    } else if (address < 0xFF00) {
+        //reserved unusable...
         return 0;
-    }
-    else if (address < 0xFF80)
-    {
+    } else if (address < 0xFF80) {
+        //IO Registers...
         return io_read(address);
-    }
-    else if (address < 0xFFFF)
-    {
-        return hram_read(address);
-    }
-    else if (address == 0xFFFF)
-    {
+    } else if (address == 0xFFFF) {
+        //CPU ENABLE REGISTER...
         return cpu_get_ie_register();
     }
-    else
-    {
-        printf("Address outside of memory range: %04X\n", address);
-        exit(MEMORY_OUT_OF_RANGE);
-    }
 
+    //NO_IMPL
+    return hram_read(address);
 }
 
 void bus_write(u16 address, u8 value)
 {
-    if (address < 0x8000)
-    {
+    if (address < 0x8000) {
+        //ROM Data
         cart_write(address, value);
-    }
-    else if (address < 0xA000)
-    {
+    } else if (address < 0xA000) {
+        //Char/Map Data
         ppu_vram_write(address, value);
-    }
-    else if (address < 0xC000)
-    {
+    } else if (address < 0xC000) {
+        //EXT-RAM
         cart_write(address, value);
-    }
-    else if (address < 0xE000)
-    {
+    } else if (address < 0xE000) {
+        //WRAM
         wram_write(address, value);
-    }
-    else if (address < 0xFE00)
-    {
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
-        //TODO Implement Echo RAM
-    }
-    else if (address < 0xFEA0)
-    {
-        if (dma_transferring())
+    } else if (address < 0xFE00) {
+        //reserved echo ram
+    } else if (address < 0xFEA0) {
+        //OAM
+
+        if (dma_transferring()) {
             return;
-        
+        }
+
         ppu_oam_write(address, value);
-    }
-    else if (address < 0xFF00)
-    {
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
-        printf("ACCESS OF NINTENDO PROHIBITED MEMORY AREA\n");
-        //TODO Nintendo prohibited AREA
-    }
-    else if (address < 0xFF80)
-    {
+    } else if (address < 0xFF00) {
+        //unusable reserved
+    } else if (address < 0xFF80) {
+        //IO Registers...
         io_write(address, value);
-    }
-    else if (address < 0xFFFF)
-    {
-        hram_write(address, value);
-    }
-    else if (address == 0xFFFF)
-    {
+    } else if (address == 0xFFFF) {
+        //CPU SET ENABLE REGISTER
+
         cpu_set_ie_register(value);
-    }
-    else
-    {
-        printf("Address outside of memory range: %04X\n", address);
-        exit(MEMORY_OUT_OF_RANGE);
+    } else {
+        hram_write(address, value);
     }
 }
 
@@ -144,7 +107,6 @@ u16 bus_read16(u16 address)
 
 void bus_write16(u16 address, u16 value)
 {
-    // write 0xABCD in memory as 0xCD 0xAB
-    bus_write(address + 1, (value >> 8) & 0x00FF);
-    bus_write(address, value & 0x00FF);
+    bus_write(address + 1, (value >> 8) & 0xFF);
+    bus_write(address, value & 0xFF);
 }

@@ -18,7 +18,7 @@ void timer_tick()
 {
     u16 prev_div = ctx.div;
     
-    ctx.div++; //div counts t_cycles
+    ctx.div++; //div counts t_cycles? or m_cycles?
 
     if (BIT(prev_div, 5) && !BIT(ctx.div, 5)) apu_tick(); // maybe change to bit 4
 

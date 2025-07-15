@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+int usleep(int usec);
 
 typedef uint8_t u8;
 typedef uint16_t u16;
